@@ -10,65 +10,102 @@
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/btnOverview"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_marginBottom="130dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button2"
-        android:layout_alignBottom="@+id/button"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button3"
-        android:layout_alignBottom="@+id/button2"
+        android:layout_alignBaseline="@+id/btnNewTask"
+        android:layout_alignBottom="@+id/btnNewTask"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="New Button" />
+
+    <Button
+        android:id="@+id/btnNewTask"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/txtDate"
+        android:layout_marginTop="50dp"
+        android:text="New Button" />
 
     <TextView
+        android:id="@+id/txtCompany"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/textView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/button2"
-        android:layout_alignEnd="@+id/button2"
-        android:layout_marginRight="51dp"
-        android:layout_marginEnd="51dp"
-        android:layout_marginTop="140dp" />
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/txtDay"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/txtDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/txtName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageButton
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/imageButton"
+        android:id="@+id/btnStart"
         android:scaleType="fitCenter"
         android:src="@drawable/startbtn"
-        android:layout_alignTop="@+id/imageButton"
+        android:layout_alignTop="@+id/btnStop"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <ImageButton
+        android:id="@+id/btnStop"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/imageButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="45dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/stopbtn"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:src="@drawable/stopbtn" />
+
+    <EditText
+        android:id="@+id/txtDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnNewTask"
+        android:layout_marginTop="19dp"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textMultiLine"/>
 
 </RelativeLayout>
