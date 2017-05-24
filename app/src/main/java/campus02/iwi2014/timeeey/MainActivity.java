@@ -1,5 +1,6 @@
 package campus02.iwi2014.timeeey;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     TextView txtDay;
     TextView txtDate;
     TextView txtDescription;
+
+    Button newTask;
 
     String test = "";
 
@@ -78,6 +82,16 @@ public class MainActivity extends AppCompatActivity {
         txtName.setTextColor(Color.BLACK);
         txtCompany.setTextColor(Color.BLACK);
         txtDescription.setTextColor(Color.BLACK);
+
+
+        // Buttons
+        newTask = (Button)findViewById(R.id.btnNewTask);
+        newTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, TaskActivity.class));
+            }
+        });
     }
 
     @Override
@@ -101,4 +115,9 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+
 }
