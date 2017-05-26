@@ -6,24 +6,33 @@
     android:layout_height="match_parent"
     tools:context="campus02.iwi2014.timeeey.TaskActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Starte Tätigkeit"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="332dp"
-        android:layout_marginTop="200dp"/>
-
     <Spinner
         android:id="@+id/spinnerTasks"
         android:layout_width="match_parent"
         android:layout_height="66dp"
         android:layout_marginTop="100dp" />
 
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginTop="300dp"
+        android:text="Starte Tätigkeit"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="332dp" />
+
+    <EditText
+        android:id="@+id/txtDescription"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnNewTask"
+        android:layout_marginTop="190dp"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textMultiLine" />
+
 </android.support.design.widget.CoordinatorLayout>
