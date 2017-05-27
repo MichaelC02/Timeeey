@@ -12,11 +12,17 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
 
 
 public class MyAsyncTask extends AsyncTask<String,Void,String> {
@@ -34,11 +40,32 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
     }*/
 
     @Override
+    // 1. Parameter = get/post
+    // 2. Parameter = API-Methode
+    // 3. Parameter = Post-Body
     protected String doInBackground(String... params) {
         try {
             HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet("http://10.211.55.5:1582/api/" + params[0]);
-            HttpResponse response = client.execute(request);
+            HttpResponse response;
+
+            if(params[0] == "get")
+            {
+                HttpUriRequest request = new HttpGet("http://10.211.55.5:1582/api/" + params[1]);
+                response = client.execute(request);
+            }
+            else if(params[0] == "post")
+            {
+                HttpPost request = new HttpPost("http://10.211.55.5:1582/api/" + params[1]);
+                request.addHeader("content-type", "text/json");
+                HttpEntity entity = new ByteArrayEntity(params[2].getBytes("UTF-8"));
+                request.setEntity(entity);
+                response = client.execute(request);
+            }
+            else
+            {
+                return null;
+            }
+
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
             String line;

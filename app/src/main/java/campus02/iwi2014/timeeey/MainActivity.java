@@ -1,5 +1,6 @@
 package campus02.iwi2014.timeeey;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     TextView txtDescription;
 
     Button newTask;
+
+    ImageButton btnStop;
 
     String test = "";
 
@@ -90,6 +94,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, TaskActivity.class));
+            }
+        });
+
+        btnStop = (ImageButton)findViewById(R.id.btnStop);
+        btnStop.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                restConnector.StopCurrentTask();
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertDialogBuilder.setMessage("Tätigkeit wurde beendet!");
+                alertDialogBuilder.setPositiveButton("OK", null);
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
             }
         });
     }

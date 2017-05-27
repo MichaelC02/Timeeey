@@ -1,5 +1,6 @@
 package campus02.iwi2014.timeeey;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -21,14 +23,20 @@ import org.json.*;
 
 public class TaskActivity extends AppCompatActivity
 {
+    Spinner spinnerTasks;
+    TextView txtDescription;
+    Button btnStart;
+    long selectedTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-        Spinner spinnerTasks;
-        TextView txtDescription = (TextView)findViewById(R.id.txtDescription);
+        btnStart = (Button)findViewById(R.id.btnStart);
+
+        txtDescription = (TextView)findViewById(R.id.txtDescription);
         txtDescription.setTextColor(Color.BLACK);
         List<String> tasks=restConnector.GetTasks();
 
@@ -39,7 +47,8 @@ public class TaskActivity extends AppCompatActivity
         spinnerTasks.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String description=restConnector.GetTaskDescription(id+1);
+                selectedTask = id+1;
+                String description=restConnector.GetTaskDescription(selectedTask);
                 TextView txtDescription = (TextView)findViewById(R.id.txtDescription);
                 txtDescription.setText(description);
             }
@@ -51,10 +60,15 @@ public class TaskActivity extends AppCompatActivity
 
         });
 
-
-
-
-
-
+        btnStart.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                restConnector.StartTask(selectedTask);
+                startActivity(new Intent(TaskActivity.this, MainActivity.class));
+            }
+        });
     }
+
+
 }
