@@ -20,6 +20,8 @@ import java.util.concurrent.ExecutionException;
 public class restConnector {
 
     static DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:'00'");
+    static DateFormat df2 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    static DateFormat df3 = new SimpleDateFormat("HH:mm");
 
     public static List<String> GetTasks() {
         try {
@@ -32,6 +34,21 @@ public class restConnector {
             }
 
             return taskNames;
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            System.out.print(e.getMessage());
+            return null;
+        }
+    }
+
+    public static String GetTaskName(String taskId)
+    {
+        try {
+            String jsonString = new MyAsyncTask().execute("get","task/"+taskId).get();
+            JSONArray arr = new JSONArray(jsonString);
+
+            return arr.getJSONObject(0).getString("name");
+
+
         } catch (InterruptedException | ExecutionException | JSONException e) {
             System.out.print(e.getMessage());
             return null;
