@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     TextView txtDate;
     TextView txtDescription;
 
-    Button newTask;
+    Button btnNewTask;
+    Button btnOverview;
 
     ImageButton btnStop;
 
@@ -64,12 +68,26 @@ public class MainActivity extends AppCompatActivity {
         Date currentDate = new Date();
         txtDate.setText(dateFormat.format(currentDate));
 
-
-
-
         txtDay = (TextView)findViewById(R.id.txtDay);
         txtDay.setText(Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN));
 
+        txtDescription = (TextView)findViewById(R.id.txtDescription);
+        /*String currentTask = restConnector.GetOpenEntry();
+        if (currentTask == null) {
+            //txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
+        }
+        else
+        {
+            try {
+                JSONObject currentEntry = new JSONObject(currentTask);
+                String taskName = currentEntry.getString("name");
+                txtDescription.setText("Derzeit wird die Tätigkeit '"+taskName+"' ausgeführt.");
+            }
+            catch(JSONException e)
+            {
+                System.out.print(e.getMessage());
+            }
+        }*/
 
         // Dummy-Werte
         txtName = (TextView)findViewById(R.id.txtName);
@@ -77,9 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
         txtCompany = (TextView)findViewById(R.id.txtCompany);
         txtCompany.setText("Mustermann GmbH");
-
-        txtDescription = (TextView)findViewById(R.id.txtDescription);
-        txtDescription.setText("Mustermann GmbH\nTest\nabc");
 
         txtDay.setTextColor(Color.BLACK);
         txtDate.setTextColor(Color.BLACK);
@@ -89,11 +104,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Buttons
-        newTask = (Button)findViewById(R.id.btnNewTask);
-        newTask.setOnClickListener(new View.OnClickListener() {
+        btnNewTask = (Button)findViewById(R.id.btnNewTask);
+        btnNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, TaskActivity.class));
+            }
+        });
+
+        btnOverview = (Button)findViewById(R.id.btnOverview);
+        btnOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, OverviewActivity.class));
             }
         });
 
@@ -111,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     @Override

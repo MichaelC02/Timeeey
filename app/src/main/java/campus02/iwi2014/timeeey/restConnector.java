@@ -53,18 +53,35 @@ public class restConnector {
         }
     }
 
+    public static String GetOpenEntry()
+    {
+        try {
+
+
+            AsyncTask getOpenEntry = new MyAsyncTask().execute("get", "openentry");
+            if (!getOpenEntry.isCancelled()) {
+
+                return getOpenEntry.get().toString();
+            } else {
+                return null;
+            }
+        }
+        catch(InterruptedException | ExecutionException e)
+        {
+            System.out.print(e.getMessage());
+            return null;
+        }
+    }
+
     public static void StopCurrentTask()
     {
         try
         {
 
             String now = df.format(Calendar.getInstance().getTime());
-            String jsonString;
+            String jsonString = GetOpenEntry();
 
-            AsyncTask getOpenEntry = new MyAsyncTask().execute("get","openentry");
-            if (!getOpenEntry.isCancelled()) {
-
-                jsonString = getOpenEntry.get().toString();
+            if (jsonString != null) {
                 JSONObject currentEntry = new JSONObject(jsonString);
 
                 currentEntry.put("timeOut", now);
@@ -93,6 +110,18 @@ public class restConnector {
 
         } catch (InterruptedException | ExecutionException | JSONException e) {
             System.out.print(e.getMessage());
+        }
+    }
+
+    public static JSONArray GetEntries() {
+        try {
+            List<String> taskNames = new ArrayList<>();
+            String jsonString = new MyAsyncTask().execute("get","entry").get();
+            return new JSONArray(jsonString);
+            
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            System.out.print(e.getMessage());
+            return null;
         }
     }
 }
