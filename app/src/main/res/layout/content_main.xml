@@ -9,103 +9,123 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnOverview"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btnNewTask"
-        android:layout_alignBottom="@+id/btnNewTask"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="Übersicht" />
-
-    <Button
-        android:id="@+id/btnNewTask"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/txtDate"
-        android:layout_marginTop="50dp"
-        android:text="Tätigkeit starten" />
-
-    <TextView
-        android:id="@+id/txtCompany"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/back"
         android:layout_alignParentTop="true"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/txtDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/txtDay"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/txtDay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/txtName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/txtName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical">
 
-    <ImageButton
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/btnStart"
-        android:scaleType="fitCenter"
-        android:src="@drawable/startbtn"
-        android:layout_alignTop="@+id/btnStop"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <ImageButton
-        android:id="@+id/btnStop"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="45dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/stopbtn" />
-
-    <EditText
-        android:id="@+id/txtDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/btnNewTask"
-        android:layout_marginTop="19dp"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="textMultiLine"/>
-
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:weightSum="2"
+            android:background="@drawable/back">
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="10pt"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:background="@drawable/back"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/txtCompany"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="10pt"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:background="@drawable/back"
+                android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:weightSum="2"
+            android:orientation="vertical"
+            android:background="@drawable/back">
+            <TextView
+                android:id="@+id/txtDay"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/txtDate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:padding="10dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:weightSum="2"
+            android:background="@drawable/back">
+            <Button
+                android:id="@+id/btnNewTask"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Tätigkeit starten"
+                android:padding="10dp"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/btnOverview"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Übersicht"
+                android:padding="10dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:weightSum="1"
+            android:background="@drawable/back">
+            <EditText
+                android:id="@+id/txtDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_marginTop="19dp"
+                android:ems="10"
+                android:enabled="false"
+                android:inputType="textMultiLine"
+                android:text="Momentane Tätigkeit"
+                android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:background="@drawable/back">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/btnStart"
+                android:scaleType="fitCenter"
+                android:src="@drawable/startbtn"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/btnStop"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/stopbtn"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
