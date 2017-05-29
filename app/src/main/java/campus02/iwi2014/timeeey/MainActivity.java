@@ -54,22 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Fixe Werte
         txtDate = (TextView) findViewById(R.id.txtDate);
-        Timer t = new Timer();
-
-/*
-        ToDo: Funktioniert noch nicht
-
-        t.schedule(new TimerTask() {
-            @Override public void run() {
-                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-                Date currentDate = new Date();
-                txtDate.setText(dateFormat.format(currentDate));
-            }
-        }, 0L, 1000L);
- */
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        Date currentDate = new Date();
-        txtDate.setText(dateFormat.format(currentDate));
 
         txtDay = (TextView)findViewById(R.id.txtDay);
         txtDay.setText(Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN));
@@ -143,6 +127,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Thread um Datum und Uhrzeit aktuell zu halten
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateDateTime();
+                            }
+                        });
+                        Thread.sleep(1000);
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        t.start();
     }
 
     @Override
@@ -165,5 +170,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateDateTime()
+    {
+        Date currentDate = new Date();
+        txtDate.setText(restConnector.df2.format(currentDate));
     }
 }
