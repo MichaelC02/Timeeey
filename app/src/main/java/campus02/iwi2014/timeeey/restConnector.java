@@ -1,6 +1,7 @@
 package campus02.iwi2014.timeeey;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,14 +99,12 @@ public class restConnector {
             String now = df.format(Calendar.getInstance().getTime());
             String jsonString = GetOpenEntry();
 
-            if (jsonString != null) {
+            if (!TextUtils.isEmpty(jsonString)) {
                 JSONObject currentEntry = new JSONObject(jsonString);
 
                 currentEntry.put("timeOut", now);
                 jsonString = new MyAsyncTask().execute("post", "entry", currentEntry.toString()).get();
             }
-
-
 
         } catch (InterruptedException | ExecutionException | JSONException e) {
             System.out.print(e.getMessage());

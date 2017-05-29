@@ -32,8 +32,7 @@ public class OverviewActivity extends AppCompatActivity {
                 String taskName = restConnector.GetTaskName(taskId);
                 String line;
 
-                //ToDo: IF geht nicht auf!?
-                if (entries.getJSONObject(i).getString("timeOut") == "0001-01-01T00:00:00") {
+                if (entries.getJSONObject(i).getString("timeOut").equals("0001-01-01T00:00:00")) {
                     line = "Seit " + restConnector.df2.format(restConnector.df.parse(entries.getJSONObject(i).getString("timeIn")))+": "+taskName;
                 }
                 else

@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
         // Fixe Werte
         txtDate = (TextView) findViewById(R.id.txtDate);
         Timer t = new Timer();
-        /*
-        Funktioniert noch nicht
+
+/*
+        ToDo: Funktioniert noch nicht
 
         t.schedule(new TimerTask() {
             @Override public void run() {
@@ -63,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 Date currentDate = new Date();
                 txtDate.setText(dateFormat.format(currentDate));
             }
-        }, 0L, 1000L);*/
+        }, 0L, 1000L);
+ */
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         Date currentDate = new Date();
         txtDate.setText(dateFormat.format(currentDate));
@@ -72,22 +75,24 @@ public class MainActivity extends AppCompatActivity {
         txtDay.setText(Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN));
 
         txtDescription = (TextView)findViewById(R.id.txtDescription);
-        /*String currentTask = restConnector.GetOpenEntry();
-        if (currentTask == null) {
-            //txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
+        String currentEntry = restConnector.GetOpenEntry();
+        if (TextUtils.isEmpty(currentEntry)) {
+            txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
         }
         else
         {
             try {
-                JSONObject currentEntry = new JSONObject(currentTask);
-                String taskName = currentEntry.getString("name");
+
+                JSONObject currentTask = new JSONObject(currentEntry);
+                String taskName=restConnector.GetTaskName(currentTask.getString("taskID"));
+
                 txtDescription.setText("Derzeit wird die Tätigkeit '"+taskName+"' ausgeführt.");
             }
             catch(JSONException e)
             {
                 System.out.print(e.getMessage());
             }
-        }*/
+        }
 
         // Dummy-Werte
         txtName = (TextView)findViewById(R.id.txtName);
@@ -132,9 +137,12 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
 
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -158,9 +166,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
 }
