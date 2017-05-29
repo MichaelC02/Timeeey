@@ -1,12 +1,11 @@
 package campus02.iwi2014.timeeey;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,13 +19,9 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     ImageButton btnStop;
 
-    String test = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        btnNewTask = (Button)findViewById(R.id.btnNewTask);
+        btnOverview = (Button)findViewById(R.id.btnOverview);
+        btnStop = (ImageButton)findViewById(R.id.btnStop);
 
         // Fixe Werte
         txtDate = (TextView) findViewById(R.id.txtDate);
@@ -59,24 +56,7 @@ public class MainActivity extends AppCompatActivity {
         txtDay.setText(Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN));
 
         txtDescription = (TextView)findViewById(R.id.txtDescription);
-        String currentEntry = restConnector.GetOpenEntry();
-        if (TextUtils.isEmpty(currentEntry)) {
-            txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
-        }
-        else
-        {
-            try {
-
-                JSONObject currentTask = new JSONObject(currentEntry);
-                String taskName=restConnector.GetTaskName(currentTask.getString("taskID"));
-
-                txtDescription.setText("Derzeit wird die Tätigkeit '"+taskName+"' ausgeführt.");
-            }
-            catch(JSONException e)
-            {
-                System.out.print(e.getMessage());
-            }
-        }
+        setDescription();
 
         // Dummy-Werte
         txtName = (TextView)findViewById(R.id.txtName);
@@ -85,15 +65,14 @@ public class MainActivity extends AppCompatActivity {
         txtCompany = (TextView)findViewById(R.id.txtCompany);
         txtCompany.setText("Mustermann GmbH");
 
+        //Text-Farbe setzen
         txtDay.setTextColor(Color.BLACK);
         txtDate.setTextColor(Color.BLACK);
         txtName.setTextColor(Color.BLACK);
         txtCompany.setTextColor(Color.BLACK);
-        txtDescription.setTextColor(Color.BLACK);
 
 
         // Buttons
-        btnNewTask = (Button)findViewById(R.id.btnNewTask);
         btnNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnOverview = (Button)findViewById(R.id.btnOverview);
         btnOverview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,11 +87,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnStop = (ImageButton)findViewById(R.id.btnStop);
         btnStop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                restConnector.StopCurrentTask();
+                RestConnector.StopCurrentTask();
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                 alertDialogBuilder.setMessage("Tätigkeit wurde beendet!");
@@ -121,10 +98,11 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
 
-                Intent intent = getIntent();
+                setDescription();
+                /*Intent intent = getIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 finish();
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
 
@@ -175,6 +153,40 @@ public class MainActivity extends AppCompatActivity {
     private void updateDateTime()
     {
         Date currentDate = new Date();
-        txtDate.setText(restConnector.df2.format(currentDate));
+        txtDate.setText(RestConnector.df2.format(currentDate));
     }
+
+    private void setDescription()
+    {
+        txtDescription.setTextColor(Color.BLACK);
+        btnOverview.setEnabled(true);
+        btnStop.setEnabled(true);
+        String currentEntry = RestConnector.GetOpenEntry();
+        if (currentEntry.equals("noContent")) {
+            txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
+            btnStop.setEnabled(false);
+        }
+        else if(currentEntry.equals("timeout")) {
+            txtDescription.setText("Es besteht derzeit keine Verbindung zum Server");
+            txtDescription.setTextColor(Color.RED);
+            btnOverview.setEnabled(false);
+        }
+        else
+        {
+            try {
+
+                JSONObject currentTask = new JSONObject(currentEntry);
+                String taskName= RestConnector.GetTaskName(currentTask.getString("taskID"));
+
+                txtDescription.setText("Derzeit wird die Tätigkeit '"+taskName+"' ausgeführt.");
+            }
+            catch(JSONException e)
+            {
+                System.out.print(e.getMessage());
+            }
+        }
+    }
+
+
+
 }

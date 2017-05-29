@@ -21,8 +21,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.HttpStatus;
 
@@ -35,8 +38,10 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
     // 3. Parameter = Post-Body
     protected String doInBackground(String... params) {
         try {
-            HttpClient client = new DefaultHttpClient();
-            HttpResponse response;
+            HttpParams httpParameters = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, 1000); //Timeout auf 3Sek.
+            HttpClient client = new DefaultHttpClient(httpParameters);
+            HttpResponse response = null;
 
             if(params[0] == "get")
             {
@@ -49,16 +54,24 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
                 request.addHeader("content-type", "text/json");
                 HttpEntity entity = new ByteArrayEntity(params[2].getBytes("UTF-8"));
                 request.setEntity(entity);
-                response = client.execute(request);
+                try {
+                    response = client.execute(request);
+                }
+                catch(ConnectTimeoutException e)
+                {
+                    OfflineDb offlineDb = new OfflineDb(MyApplication.getContext());
+                    offlineDb.addJsonString(params[2]);
+                    return "ok";
+                }
             }
             else
             {
-                return "";
+                return "err";
             }
 
             if(response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT) {
                 // Kein Content erhalten
-                return "";
+                return "noContent";
             }
 
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -75,10 +88,16 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
 */
             return line;
         }
-        catch(IOException e)
-        {
+        catch(IOException e) {
             System.out.print(e.getMessage());
-            return "";
+            if (e instanceof ConnectTimeoutException)
+            {
+                return "timeout";
+            }
+            else
+                {
+                return "err";
+            }
         }
 
 

@@ -1,5 +1,6 @@
 package campus02.iwi2014.timeeey;
 
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
@@ -18,20 +19,54 @@ import java.util.concurrent.ExecutionException;
  * Created by michael on 26.05.17.
  */
 
-public class restConnector {
+public class RestConnector {
 
     static DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:'00'");
     static DateFormat df2 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     static DateFormat df3 = new SimpleDateFormat("HH:mm");
 
-    public static List<String> GetTasks() {
+    public static JSONArray GetTasks() {
+        try {
+            String jsonString = new MyAsyncTask().execute("get","task").get();
+
+            if (!jsonString.equals("timeout"))
+            {
+                return new JSONArray(jsonString);
+            }
+
+            return null;
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            System.out.print(e.getMessage());
+            return null;
+        }
+    }
+
+    public static List<String> GetTaskNames() {
         try {
             List<String> taskNames = new ArrayList<>();
             String jsonString = new MyAsyncTask().execute("get","task").get();
-            JSONArray arr = new JSONArray(jsonString);
+            OfflineDb offlineDb = new OfflineDb(MyApplication.getContext());
 
-            for (int i = 0; i < arr.length(); i++) {
-                taskNames.add(arr.getJSONObject(i).getString("name"));
+            if (jsonString.equals("timeout")) {
+                Cursor offlineTasks = offlineDb.selectTasks();
+
+                if (offlineTasks != null) {
+                    try {
+                        while (offlineTasks.moveToNext()) {
+                            taskNames.add(offlineTasks.getString(offlineTasks.getColumnIndex("name")));
+                        }
+                    } finally {
+                        offlineTasks.close();
+                    }
+                }
+            }
+            else
+            {
+                JSONArray arr = new JSONArray(jsonString);
+
+                for (int i = 0; i < arr.length(); i++) {
+                    taskNames.add(arr.getJSONObject(i).getString("name"));
+                }
             }
 
             return taskNames;
@@ -60,14 +95,32 @@ public class restConnector {
     {
         try {
             String jsonString = new MyAsyncTask().execute("get","task/"+taskId).get();
-            JSONArray arr = new JSONArray(jsonString);
 
-            return arr.getJSONObject(0).getString("description");
+            if (jsonString.equals("timeout")) {
+                OfflineDb offlineDb = new OfflineDb(MyApplication.getContext());
+                Cursor offlineTasks = offlineDb.selectTaskById(taskId);
 
+                if (offlineTasks != null)
+                {
+                    try {
+                        offlineTasks.moveToFirst();
+                        return offlineTasks.getString(offlineTasks.getColumnIndex("description"));
+                    } finally {
+                        offlineTasks.close();
+                    }
+                }
+
+                return "";
+            }
+            else
+            {
+                JSONArray arr = new JSONArray(jsonString);
+                return arr.getJSONObject(0).getString("description");
+            }
 
         } catch (InterruptedException | ExecutionException | JSONException e) {
             System.out.print(e.getMessage());
-            return null;
+            return "";
         }
     }
 
@@ -80,6 +133,7 @@ public class restConnector {
             if (!getOpenEntry.isCancelled()) {
 
                 return getOpenEntry.get().toString();
+
             } else {
                 return null;
             }
@@ -95,7 +149,6 @@ public class restConnector {
     {
         try
         {
-
             String now = df.format(Calendar.getInstance().getTime());
             String jsonString = GetOpenEntry();
 
@@ -138,6 +191,30 @@ public class restConnector {
         } catch (InterruptedException | ExecutionException | JSONException e) {
             System.out.print(e.getMessage());
             return null;
+        }
+    }
+
+    public static void uploadEntries()
+    {
+        OfflineDb offlineDb = new OfflineDb(MyApplication.getContext());
+        Cursor jsons = offlineDb.selectJsonStrings();
+
+        if(jsons!= null) {
+            try {
+                while (jsons.moveToNext()) {
+                    String json = jsons.getString(jsons.getColumnIndex("jsonString"));
+                    String jsonString = new MyAsyncTask().execute("post", "entry", json).get();
+                }
+
+                offlineDb.deleteJsons();
+            }
+            catch(InterruptedException | ExecutionException e)
+            {
+                System.out.print(e.getMessage());
+            }
+            finally {
+                jsons.close();
+            }
         }
     }
 }
