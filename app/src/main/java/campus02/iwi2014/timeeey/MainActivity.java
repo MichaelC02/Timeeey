@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtDate;
     TextView txtDescription;
 
-    Button btnNewTask;
+    ImageButton btnNewTask;
     Button btnOverview;
 
     ImageButton btnStop;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        btnNewTask = (Button)findViewById(R.id.btnNewTask);
+        btnNewTask = (ImageButton)findViewById(R.id.btnNewTask);
         btnOverview = (Button)findViewById(R.id.btnOverview);
         btnStop = (ImageButton)findViewById(R.id.btnStop);
 

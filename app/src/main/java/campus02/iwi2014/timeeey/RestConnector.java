@@ -150,14 +150,12 @@ public class RestConnector {
         try
         {
             String now = df.format(Calendar.getInstance().getTime());
-            String jsonString = GetOpenEntry();
+            //String jsonString = GetOpenEntry();
 
-            if (!TextUtils.isEmpty(jsonString)) {
-                JSONObject currentEntry = new JSONObject(jsonString);
+            JSONObject currentEntry = new JSONObject();
+            currentEntry.put("timeOut", now);
+            String jsonString = new MyAsyncTask().execute("post", "entrystop", currentEntry.toString()).get();
 
-                currentEntry.put("timeOut", now);
-                jsonString = new MyAsyncTask().execute("post", "entry", currentEntry.toString()).get();
-            }
 
         } catch (InterruptedException | ExecutionException | JSONException e) {
             System.out.print(e.getMessage());
@@ -203,7 +201,9 @@ public class RestConnector {
             try {
                 while (jsons.moveToNext()) {
                     String json = jsons.getString(jsons.getColumnIndex("jsonString"));
-                    String jsonString = new MyAsyncTask().execute("post", "entry", json).get();
+                    String method = jsons.getString(jsons.getColumnIndex("postMethod"));
+
+                    String jsonString = new MyAsyncTask().execute("post", method, json).get();
                 }
 
                 offlineDb.deleteJsons();
