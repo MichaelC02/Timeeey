@@ -16,6 +16,7 @@ public class OfflineDb{
 
     public final static String tableJsons="jsonStrings";
     public final static String jsonString="jsonString";
+    public final static String postMethod="postMethod";
 
     public final static String tableTasks="tasks";
     public final static String taskId="id";
@@ -27,9 +28,10 @@ public class OfflineDb{
         database = dbHelper.getWritableDatabase();
     }
 
-    public long addJsonString(String json){
+    public long addJsonString(String json, String method){
         ContentValues values = new ContentValues();
         values.put(jsonString, json);
+        values.put(postMethod, method);
         return database.insert(tableJsons, null, values);
     }
 
@@ -37,9 +39,6 @@ public class OfflineDb{
         String[] cols = new String[] {jsonString};
         Cursor mCursor = database.query(true, tableJsons,cols,null
                 , null, null, null, "id", null);
-       /* if (mCursor != null) {
-            mCursor.moveToFirst();
-        }*/
         return mCursor; // iterate to get each value.
     }
 
@@ -55,9 +54,6 @@ public class OfflineDb{
         String[] cols = new String[] {taskId, taskName, taskDescription};
         Cursor mCursor = database.query(true, tableTasks,cols,null
                 , null, null, null, taskId, null);
-        /*if (mCursor != null) {
-            mCursor.moveToFirst();
-        }*/
         return mCursor; // iterate to get each value.
     }
 
@@ -65,9 +61,6 @@ public class OfflineDb{
         String[] cols = new String[] {taskId, taskName, taskDescription};
         Cursor mCursor = database.query(true, tableTasks,cols,taskId+"=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
-        /*if (mCursor != null) {
-            mCursor.moveToFirst();
-        }*/
         return mCursor; // iterate to get each value.
     }
 

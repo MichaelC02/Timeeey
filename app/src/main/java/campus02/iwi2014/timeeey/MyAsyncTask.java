@@ -60,7 +60,8 @@ public class MyAsyncTask extends AsyncTask<String,Void,String> {
                 catch(ConnectTimeoutException e)
                 {
                     OfflineDb offlineDb = new OfflineDb(MyApplication.getContext());
-                    offlineDb.addJsonString(params[2]);
+                    offlineDb.addJsonString(params[2], params[1]);
+
                     return "ok";
                 }
             }

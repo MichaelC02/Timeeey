@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper
 
     // Database creation sql statement
     private static final String TABLE_JSONS_CREATE = "create table jsonStrings" +
-            "(id integer primary key AUTOINCREMENT NOT NULL, jsonString text not null);";
+            "(id integer primary key AUTOINCREMENT NOT NULL, jsonString text not null, postMethod varchar2(5) not null);";
     private static final String TABLE_TASKS_CREATE = "create table tasks" +
             "(id integer, name varchar2(100), description varchar2(100));";
 
@@ -27,7 +27,8 @@ public class DbHelper extends SQLiteOpenHelper
 
     // Method is called during creation of the database
     @Override
-    public void onCreate(SQLiteDatabase database) {
+    public void onCreate(SQLiteDatabase database)
+    {
         database.execSQL(TABLE_JSONS_CREATE);
         database.execSQL(TABLE_TASKS_CREATE);
     }
