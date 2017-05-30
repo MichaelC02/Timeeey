@@ -76,6 +76,43 @@ public class RestConnector {
         }
     }
 
+    public static TaskData GetTaskById(String taskId)
+    {
+        try {
+            String jsonString = new MyAsyncTask().execute("get","task/"+taskId).get();
+            OfflineDb offlineDb = new OfflineDb(MyApplication.getContext());
+
+            if (jsonString.equals("timeout")) {
+                Cursor offlineTasks = offlineDb.selectTasks();
+
+                if (offlineTasks != null) {
+                    try {
+                        while (offlineTasks.moveToNext()) {
+                            if (offlineTasks.getString(offlineTasks.getColumnIndex("id")).equals(taskId)) {
+                                JSONObject task = new JSONObject();
+                                task.put("name", offlineTasks.getString(offlineTasks.getColumnIndex("name")));
+                                return new TaskData(task.toString(),true);
+                            }
+                        }
+                    } finally {
+                        offlineTasks.close();
+                    }
+                }
+
+                return new TaskData("",true);
+            }
+            else
+            {
+                JSONArray arr = new JSONArray(jsonString);
+                return new TaskData(arr.getJSONObject(0).toString(),false);
+            }
+
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            System.out.print(e.getMessage());
+            return new TaskData("",false);
+        }
+    }
+
     public static String GetTaskName(String taskId)
     {
         try {

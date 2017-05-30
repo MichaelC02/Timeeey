@@ -33,12 +33,6 @@ public class TaskActivity extends AppCompatActivity
         txtDescription.setTextColor(Color.BLACK);
         List<String> tasks= RestConnector.GetTaskNames();
 
-        /*TODO:DELETE
-        if(tasks.isEmpty()){
-            OfflineDb offlineDb = new OfflineDb(MyApplication.getContext());
-            Cursor offlineTasks = offlineDb.selectTasks();
-        }*/
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tasks);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTasks = (Spinner)findViewById(R.id.spinnerTasks);
@@ -64,7 +58,13 @@ public class TaskActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 RestConnector.StartTask(selectedTask);
-                startActivity(new Intent(TaskActivity.this, MainActivity.class));
+
+                Intent intent = new Intent(TaskActivity.this, MainActivity.class);
+                Bundle b = new Bundle();
+                b.putLong("currentTask", selectedTask);
+                intent.putExtras(b);
+                startActivity(intent);
+                finish();
             }
         });
     }

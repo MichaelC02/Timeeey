@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtCompany;
     TextView txtDay;
     TextView txtDate;
+    TextView txtError;
     TextView txtDescription;
 
     ImageButton btnNewTask;
@@ -38,31 +39,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        btnNewTask = (ImageButton)findViewById(R.id.btnNewTask);
-        btnOverview = (Button)findViewById(R.id.btnOverview);
-        btnStop = (ImageButton)findViewById(R.id.btnStop);
+        btnNewTask = (ImageButton) findViewById(R.id.btnNewTask);
+        btnOverview = (Button) findViewById(R.id.btnOverview);
+        btnStop = (ImageButton) findViewById(R.id.btnStop);
 
         // Fixe Werte
         txtDate = (TextView) findViewById(R.id.txtDate);
 
-        txtDay = (TextView)findViewById(R.id.txtDay);
+        txtDay = (TextView) findViewById(R.id.txtDay);
         txtDay.setText(Calendar.getInstance().getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN));
 
-        txtDescription = (TextView)findViewById(R.id.txtDescription);
+        txtError = (TextView) findViewById(R.id.txtError);
+        txtDescription = (TextView) findViewById(R.id.txtDescription);
         setDescription();
 
         // Dummy-Werte
-        txtName = (TextView)findViewById(R.id.txtName);
+        txtName = (TextView) findViewById(R.id.txtName);
         txtName.setText("Max Mustermann");
 
-        txtCompany = (TextView)findViewById(R.id.txtCompany);
+        txtCompany = (TextView) findViewById(R.id.txtCompany);
         txtCompany.setText("Mustermann GmbH");
 
         //Text-Farbe setzen
@@ -70,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         txtDate.setTextColor(Color.BLACK);
         txtName.setTextColor(Color.BLACK);
         txtCompany.setTextColor(Color.BLACK);
-
+        txtError.setTextColor(Color.RED);
+        txtDescription.setTextColor(Color.BLACK);
 
         // Buttons
         btnNewTask.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnStop.setOnClickListener(new View.OnClickListener(){
+        btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RestConnector.StopCurrentTask();
@@ -98,11 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
 
-                setDescription();
-                /*Intent intent = getIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                finish();
-                startActivity(intent);*/
+                txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
             }
         });
 
@@ -150,43 +148,63 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateDateTime()
-    {
+    private void updateDateTime() {
         Date currentDate = new Date();
         txtDate.setText(RestConnector.df2.format(currentDate));
     }
 
-    private void setDescription()
-    {
-        txtDescription.setTextColor(Color.BLACK);
-        btnOverview.setEnabled(true);
-        btnStop.setEnabled(true);
-        String currentEntry = RestConnector.GetOpenEntry();
-        if (currentEntry.equals("noContent")) {
-            txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
-            btnStop.setEnabled(false);
+    private void setDescription() {
+        Bundle b = getIntent().getExtras();
+        long currentTaskId = -1;
+        if (b != null)
+            currentTaskId = b.getLong("currentTask");
+
+        String currentEntry;
+        TaskData taskData = new TaskData("", false);
+        if (currentTaskId > -1) {
+            taskData = RestConnector.GetTaskById(String.valueOf(currentTaskId));
+            currentEntry = taskData.task;
+        } else {
+            currentEntry = RestConnector.GetOpenEntry();
         }
-        else if(currentEntry.equals("timeout")) {
-            txtDescription.setText("Es besteht derzeit keine Verbindung zum Server");
-            txtDescription.setTextColor(Color.RED);
+
+
+        if (currentEntry.equals("timeout")) {
+            txtError.setVisibility(View.VISIBLE);
             btnOverview.setEnabled(false);
-        }
-        else
-        {
-            try {
-
-                JSONObject currentTask = new JSONObject(currentEntry);
-                String taskName= RestConnector.GetTaskName(currentTask.getString("taskID"));
-
-                txtDescription.setText("Derzeit wird die Tätigkeit '"+taskName+"' ausgeführt.");
+        } else {
+            if(taskData.timeout) {
+                txtError.setVisibility(View.VISIBLE);
+                btnOverview.setEnabled(false);
             }
-            catch(JSONException e)
-            {
-                System.out.print(e.getMessage());
+            else {
+                txtError.setVisibility(View.INVISIBLE);
+                btnOverview.setEnabled(true);
+            }
+
+            if (currentEntry.equals("noContent")) {
+                txtDescription.setText("Derzeit wird keine Tätigkeit ausgeführt.");
+                btnStop.setEnabled(false);
+            } else {
+                btnStop.setEnabled(true);
+
+                try {
+
+                    JSONObject currentTask = new JSONObject(currentEntry);
+                    String taskName;
+                    if (currentTask.has("taskID")) {
+                        taskName = RestConnector.GetTaskName(currentTask.getString("taskID"));
+                    } else {
+                        taskName = currentTask.getString("name");
+                    }
+
+                    txtDescription.setText("Derzeit wird die Tätigkeit '" + taskName + "' ausgeführt.");
+                } catch (JSONException e) {
+                    System.out.print(e.getMessage());
+                }
             }
         }
     }
-
 
 
 }

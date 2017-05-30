@@ -74,14 +74,32 @@
             android:weightSum="1"
             android:background="@drawable/back">
             <EditText
+                android:id="@+id/txtError"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:enabled="false"
+                android:inputType="textMultiLine"
+                android:text="Es besteht derzeit keine Verbindung zum Server!"
+                android:visibility="invisible"
+                android:layout_weight="1"/>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:weightSum="1"
+            android:background="@drawable/back">
+            <EditText
                 android:id="@+id/txtDescription"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:layout_height="120dp"
                 android:layout_marginTop="19dp"
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="textMultiLine"
-                android:text="Momentane Tätigkeit"
+                android:text=""
                 android:layout_weight="1"/>
         </LinearLayout>
         <LinearLayout
@@ -104,12 +122,7 @@
                 android:src="@drawable/stopbtn"
                 android:layout_weight="1"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top"
-            android:weightSum="1"
-            android:background="@drawable/back">
+
             <Button
                 android:id="@+id/btnOverview"
                 style="?android:attr/buttonStyleSmall"
@@ -118,6 +131,6 @@
                 android:text="Übersicht"
                 android:padding="10dp"
                 android:layout_weight="1"/>
-        </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>
