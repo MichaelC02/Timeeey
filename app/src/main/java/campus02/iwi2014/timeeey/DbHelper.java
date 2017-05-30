@@ -12,7 +12,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper
 {
 
-    private static final String DATABASE_NAME = "jsonStrings";
+    private static final String DATABASE_NAME = "timeeeyDb";
     private static final int DATABASE_VERSION = 2;
 
     // Database creation sql statement

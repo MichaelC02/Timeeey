@@ -36,7 +36,7 @@ public class OfflineDb{
     }
 
     public Cursor selectJsonStrings() {
-        String[] cols = new String[] {jsonString};
+        String[] cols = new String[] {jsonString, postMethod};
         Cursor mCursor = database.query(true, tableJsons,cols,null
                 , null, null, null, "id", null);
         return mCursor; // iterate to get each value.
